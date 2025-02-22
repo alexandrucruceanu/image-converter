@@ -1,6 +1,4 @@
-# TODO List for Image Converter v1.0.1-beta
-
-All tasks in this TODO list have been completed and are included in the Image Converter v1.0.1-beta release.
+# TODO List for Image Converter
 
 ## Tasks
 
@@ -42,14 +40,16 @@ All tasks in this TODO list have been completed and are included in the Image Co
 ### 7. More Image Formats
 - [ ] Add RAW image formats support
 - [ ] Implement AVIF format support
-- [x] Add GIF format support with optimization options
-- [x] Add SVG format support with vector conversion
+- [ ] Add GIF format support with optimization options
 - [x] Add ICO format support for favicon generation
 - [x] Add TIFF format support
 - [x] Add BMP format support
 - [x] Add animated WebP support
 
-### 8. Performance Optimization
+### 8. Remove Format-Specific Options
+- [x] Remove format-specific options for all formats
+
+### 9. Performance Optimization
 - [ ] Optimize image loading
 - [ ] Add more caching strategies
 - [ ] Improve web workers usage
@@ -59,14 +59,14 @@ All tasks in this TODO list have been completed and are included in the Image Co
 - [x] Add more themes
 - [x] Improve accessibility features
 
-### 10. Add Social Sharing Options
+### 11. Add Social Sharing Options
 - [x] Implement direct sharing to social media platforms
 - [x] Generate shareable links for converted images
 
-### 11. Implement Plugin Support
+### 12. Implement Plugin Support
 - [ ] Design a plugin architecture
 - [ ] Allow users to extend functionality with plugins
 
-### 12. Implement AI-Powered Features
+### 13. Implement AI-Powered Features
 - [ ] Integrate AI-based image enhancement
 - [ ] Add smart format conversion recommendations

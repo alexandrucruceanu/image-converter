@@ -4,14 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const formatSelect = document.getElementById('formatSelect');
     const convertBtn = document.getElementById('convertBtn');
     const formatControls = document.getElementById('formatSpecificControls');
-    const formatSpecificControls = {
-        gif: document.getElementById('gifControls'),
-        svg: document.getElementById('svgControls'),
-        ico: document.getElementById('icoControls'),
-        tiff: document.getElementById('tiffControls'),
-        bmp: document.getElementById('bmpControls'),
-        'webp-animated': document.getElementById('webpAnimatedControls')
-    };
     const downloadBtn = document.getElementById('downloadBtn');
     const progressBar = document.getElementById('progressBar');
     const inputPreview = document.getElementById('inputPreview');
@@ -30,70 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let map = null;
     let currentTheme = 'dark';
 
-    // Format Converters (Placeholder)
+    // Format Converters
     const formatConverters = {
-        gif: async (canvas, options) => {
-            return new Promise((resolve, reject) => {
-                try {
-                    if (typeof GIF === 'undefined') {
-                        displayErrorMessage('GIF library is not loaded. GIF conversion is not available.');
-                        reject(new Error('GIF library not loaded'));
-                        return;
-                    }
-                    const gif = new GIF({
-                        workers: 2,
-                        quality: options.quality,
-                        dither: options.dither,
-                        width: canvas.width,
-                        height: canvas.height,
-                    });
-
-                    gif.addFrame(canvas, { copy: true, delay: 200 }); // Single frame from canvas
-
-                    gif.on('finished', (blob) => {
-                        resolve(blob);
-                    });
-
-                    gif.on('error', (error) => {
-                        console.error('GIF error:', error);
-                        reject(error);
-                    });
-
-                    gif.render();
-                } catch (error) {
-                    console.error('GIF error:', error);
-                    reject(error);
-                }
-            });
-        },
-        svg: async (canvas, options) => {
-             return new Promise((resolve, reject) => {
-                try {
-                    if (typeof Potrace === 'undefined') {
-                        displayErrorMessage('Potrace library is not loaded. SVG conversion is not available.');
-                        reject(new Error('Potrace library not loaded'));
-                        return;
-                    }
-                    const potrace = new Potrace({
-                        // Apply simplification and minification based on options
-                        simplification: options.simplify || 0,
-                        minify: options.minify || false
-                    });
-
-                    potrace.loadImageFromCanvas(canvas);
-
-                    potrace.process(() => {
-                        const svgData = potrace.getSVG();
-                        const blob = new Blob([svgData], { type: "image/svg+xml" });
-                        resolve(blob);
-                    });
-                } catch (error) {
-                    console.error('SVG error:', error);
-                    reject(error);
-                }
-            });
-        },
-        ico: async (canvas, options) => {
+       ico: async (canvas, options) => {
             console.log('ICO conversion with options:', options);
             return new Blob(["ICO data"], { type: "image/x-icon" }); // Placeholder
         },
@@ -121,20 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     formatSelect.addEventListener('change', () => {
         const selectedFormat = formatSelect.value;
 
-        // Hide all format-specific controls
-        for (const key in formatSpecificControls) {
-            if (formatSpecificControls.hasOwnProperty(key)) {
-                const control = formatSpecificControls[key];
-                if (control) {
-                    control.style.display = 'none';
-                }
-            }
-        }
-
-        // Show the control for the selected format
-        if (formatSpecificControls[selectedFormat]) {
-            formatSpecificControls[selectedFormat].style.display = 'block';
-        }
     });
 
     // Quality Slider
@@ -490,6 +407,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        simulateProgress(); // Start the progress bar simulation
+
         try {
             const reader = new FileReader();
             reader.onload = async (e) => {
@@ -528,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const convertedURL = URL.createObjectURL(blob);
                     outputPreview.src = convertedURL;
                     outputPreview.style.display = 'block';
-                    
+
                     const originalName = file.name.replace(/\.[^/.]+$/, '');
                     const convertedFile = new File([blob], `${originalName}-converted.${format}`, {
                         type: `image/${format}`
@@ -551,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     outputDetails.innerHTML += `<br>${sizeComparisonText}`;
-                    
+
                     // Copy metadata for output preview
                     const outputMeta = {
                         'Dimensions': `${img.width} × ${img.height} px`,
@@ -561,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Conversion Date': new Date().toLocaleString()
                     };
                     displayMetadata(outputMetadata, outputMeta);
-                    
+
                     downloadBtn.disabled = false;
                 };
                 img.onerror = () => {
@@ -578,27 +497,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function getFormatOptions(format) {
+   function simulateProgress() {
+        let progress = 0;
+        progressBar.style.width = '0';
+        const maxProgress = 95; // We will reach 95% at most
+        const increment = 0.5;  // Smaller increment for smoother animation
+        const intervalTime = 20; // More frequent updates
+
+        const interval = setInterval(() => {
+            progress += increment;
+            progressBar.style.width = `${progress}%`;
+
+            if (progress >= maxProgress) {
+                clearInterval(interval);
+            }
+        }, intervalTime);
+    }
+
+     function getFormatOptions(format) {
         switch (format) {
-            case 'gif':
-                return {
-                    quality: qualitySlider.value,
-                    dither: document.getElementById('gifDither').value,
-                    colors: document.getElementById('gifPalette').value
-                };
-            case 'svg':
-                return {
-                    simplify: parseInt(document.getElementById('svgSimplify').value),
-                    minify: document.getElementById('svgMinify').checked
-                };
             case 'ico':
                 return {
                     sizes: Array.from(document.querySelectorAll('#icoControls input[type="checkbox"]:checked'))
                         .map(cb => cb.value)
-                };
-            case 'tiff':
-                return {
-                    compression: document.getElementById('tiffCompression').value
                 };
             case 'bmp':
                 return {
@@ -614,7 +535,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {};
         }
     }
-
     // Initialize Social Media SDKs
     // Initialize Google Maps - removed
 
