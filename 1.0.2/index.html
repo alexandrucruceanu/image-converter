@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <button id="themeToggle" class="theme-toggle">🌓</button>
+    
+    <div class="controls">
+    <div id="dropZone" class="drop-zone">
+        <p>Drag & Drop Images Here</p>
+        <input type="file" id="uploadInput" hidden accept="image/*,.cr2,.nef,.arw,.dng,.orf,.raf,.rw2,.pef,.srw">
+        <button class="btn" onclick="document.getElementById('uploadInput').click()">Upload Image</button>
+    </div>
+        
+    <select id="formatSelect" class="format-select">
+        <option value="png">PNG</option>
+        <option value="jpg">JPG</option>
+        <option value="webp">WEBP</option>
+        <option value="tiff">TIFF</option>
+        <option value="bmp">BMP</option>
+        <option value="ico">ICO</option>
+    </select>
+
+    <div class="quality-presets">
+            <button class="btn preset-btn" data-quality="30">Low</button>
+            <button class="btn preset-btn" data-quality="60">Medium</button>
+            <button class="btn preset-btn" data-quality="92">High</button>
+        </div>
+        <div class="compression-controls">
+            <label for="qualitySlider">Quality:</label>
+            <input type="range" id="qualitySlider" min="0" max="100" value="92">
+            <span id="qualityValue">92%</span>
+        </div>
+        <button class="btn" id="convertBtn">Convert</button>
+        <button class="btn" id="downloadBtn" disabled>Download</button>
+    </div>
+
+    <!-- Format Specific Controls -->
+    <div class="format-controls">
+        <!-- BMP Controls -->
+        <div id="bmpControls" class="format-specific-control">
+            <h4>BMP Options</h4>
+            <div class="control-group">
+                <label for="bmpBitDepth">Bit Depth:</label>
+                <select id="bmpBitDepth">
+                    <option value="24" selected>24-bit</option>
+                    <!-- Add other bit depths later if needed -->
+                </select>
+            </div>
+        </div>
+
+        <!-- ICO Controls -->
+        <div id="icoControls" class="format-specific-control">
+            <h4>ICO Options</h4>
+            <p>(Note: Currently generates only 32x32)</p>
+            <div class="checkbox-group">
+                <label><input type="checkbox" value="16" disabled> 16x16</label>
+                <label><input type="checkbox" value="32" checked disabled> 32x32</label>
+                <label><input type="checkbox" value="48" disabled> 48x48</label>
+                <label><input type="checkbox" value="64" disabled> 64x64</label>
+            </div>
+        </div>
+
+        <!-- Add other format controls here later -->
+
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="preview-section">
+        <div class="preview-box">
+            <h3>Input Preview</h3>
+            <img id="inputPreview" class="preview-image">
+        </div>
+        <div class="preview-box">
+            <h3>Output Preview</h3>
+            <img id="outputPreview" class="preview-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- File details and metadata section -->
+    
+    <div class="file-details">
+        <div class="detail-box">
+            <h4>Input File Details</h4>
+            <p id="inputDetails">No file selected</p>
+            <div id="inputMetadata" class="metadata-section"></div>
+        </div>
+        <div class="detail-box">
+            <h4>Output File Details</h4>
+            <p id="outputDetails">Convert file to see details</p>
+            <div id="outputMetadata" class="metadata-section"></div>
+        </div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="mapContainer" class="map-container" style="display: none;"> <!-- Initially hidden -->
+        <h4>Location Data</h4>
+        <div id="map"></div> <!-- Map will be initialized here -->
+    </div>
+
+    <!-- Sharing Section -->
+    <div class="sharing-controls">
+        <h4>Share Result</h4>
+        <div class="share-buttons">
+             <button id="shareBtn" class="btn share-btn" disabled>Share</button>
+             <!-- Add other sharing options like copy link later if needed -->
+        </div>
+    </div>
+
+    <!-- Core libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- RAW Decoder Library will be imported via JS module -->
+
+     <!-- Application script (as module) -->
+    <script type="module" src="script.js"></script>
+    
+</body>
+</html>
