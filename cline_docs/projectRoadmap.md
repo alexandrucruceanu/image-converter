@@ -19,10 +19,11 @@
 - [x] Download Converted Image
 - [x] Multiple Themes (Dark, Light, Pastel)
 - [x] Theme Toggling
-- [ ] Implement conversion for specific formats (ICO, BMP, Animated WEBP - currently placeholders)
-- [ ] Implement format-specific controls (currently UI placeholders)
-- [ ] Implement sharing functionality (currently UI placeholders)
-- [ ] Fully functional GPS location display on map (currently partial/non-functional)
+- [x] Implement conversion for specific formats (ICO, BMP)
+- [ ] Implement conversion for specific formats (Animated WEBP - currently placeholders)
+- [x] Implement format-specific controls
+- [x] Implement sharing functionality
+- [x] Fully functional GPS location display on map
 
 ## Key Features (v1.0.2 - Planned)
 - [x] Implement BMP conversion
@@ -30,7 +31,7 @@
 - [x] Activate format-specific controls (Show/Hide for BMP/ICO)
 - [x] Implement GPS Map Display (Switched to Leaflet.js, basic functionality tested)
 - [x] Implement Sharing Functionality (Web Share API) (Basic functionality tested)
-- [ ] Add RAW File Input Support (e.g., CR2, NEF) (In Progress / Paused - Integration issues with libraw-wasm)
+- [x] Add RAW File Input Support (e.g., CR2, NEF)
 
 ## Completion Criteria
 - All core features listed above are implemented and function reliably across major browsers.

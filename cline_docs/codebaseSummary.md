@@ -1,7 +1,7 @@
-# Codebase Summary: Image Converter (v1.0.2 - Leaflet Map Implemented)
+# Codebase Summary: Image Converter
 
 ## Overview
-This document provides a summary of the Image Converter application's structure after implementing BMP/ICO conversion, format controls, Leaflet map display, and basic sharing in version 1.0.2. The application is a purely client-side tool built with HTML, CSS, and vanilla JavaScript.
+This document provides a summary of the Image Converter application's structure after recent updates. The application is a purely client-side tool built with HTML, CSS, and vanilla JavaScript.
 
 ## Key Components and Their Interactions
 
@@ -24,12 +24,13 @@ This document provides a summary of the Image Converter application's structure 
 ### `style.css`
 - **Styling:** Provides all visual styling for the application.
 - **Theming:** Implements Dark, Light, and Pastel themes using CSS custom properties (variables) and body classes (`.dark-theme`, `.light-theme`, `.pastel-theme`). Defines a color palette based on Pantone names.
-- **Layout:** Uses Flexbox for arranging controls, previews, and details sections.
-- **Responsiveness:** Includes basic media queries to adjust layout on smaller screens (max-width: 768px).
+- **Layout:** Uses Flexbox for layout structuring.
+- **Responsiveness:** Basic responsiveness implemented using media queries for smaller screens.
 - **Visual Feedback:** Styles interactive elements like buttons, drop zone (hover/dragover states), progress bar animation, and selected presets.
 
 ### `script.js`
 - **Core Logic:** Contains all the client-side JavaScript for the application's functionality.
+- **Internationalization (i18n):** Implements multi-language support (English, Spanish, Romanian) using a translation object, `localStorage` for preference persistence, and dynamic UI text updates.
 - **Initialization:** Sets up event listeners on DOMContentLoaded.
 - **DOM Manipulation:** Selects and interacts with various HTML elements to update UI state (previews, details, button states, progress bar).
 - **Event Handling:** Manages user interactions:
@@ -40,6 +41,7 @@ This document provides a summary of the Image Converter application's structure 
     - Download button click.
     - Share button click (triggers Web Share API).
     - Theme toggle click.
+    - Language toggle click (cycles through supported languages).
 - **Image Processing:**
     - Reads uploaded image files using `FileReader`.
     - Displays image previews using `<img>` tags and `URL.createObjectURL`.
@@ -47,7 +49,7 @@ This document provides a summary of the Image Converter application's structure 
     - Implements BMP conversion by manually constructing the file headers and pixel data using a helper function (`canvasToBMPBlob`) because `canvas.toBlob('image/bmp')` is not widely supported. The placeholder in `formatConverters` for `bmp` now uses this helper.
     - Implements basic ICO conversion (single 32x32, 32-bit image) by manually constructing the file headers and pixel data using a helper function (`canvasToICOBlob`). The placeholder in `formatConverters` for `ico` now uses this helper.
     - Includes a placeholder function (`formatConverters`) for Animated WEBP.
-    - **RAW File Handling (In Progress/Paused):** Attempts to integrate `libraw-wasm`. The current implementation initializes the module via its factory function, instantiates `LibRaw` using `new`, and calls methods on the instance. This is currently failing with `TypeError: librawInstance.openBuffer is not a function`. Further investigation of the library's API is needed.
+    - **RAW File Handling:** Integrates `libraw-wasm` for decoding RAW files. The `LibRaw` class is imported from `node_modules/libraw-wasm/dist/index.js` and directly instantiated. The `open()` and `imageData()` methods are used to process the RAW file buffer and retrieve image data.
 - **Metadata Handling:**
     - Extracts basic file info (name, size, type, dimensions).
     - Uses the `exif-js` library to extract EXIF metadata, including GPS coordinates, from uploaded images (attempted on RAW ArrayBuffer before decoding as well).
@@ -59,7 +61,7 @@ This document provides a summary of the Image Converter application's structure 
     - Uses the Web Share API (`navigator.share()`) to attempt sharing the converted image `File` when the Share button is clicked.
     - Includes fallback to share the application URL if file sharing fails or isn't supported.
     - Provides basic error handling and user messages for sharing actions.
-- **Utility Functions:** Includes helpers for formatting file size (`formatFileSize`), displaying metadata (`displayMetadata`), showing errors (`displayErrorMessage`), resetting output (`resetOutput`), simulating progress (`simulateProgress`), generating BMP files (`canvasToBMPBlob`), generating basic ICO files (`canvasToICOBlob`), and showing location on Leaflet map (`showLocationOnMap`). (Google Maps `initMap` removed).
+- **Utility Functions:** Includes helpers for formatting file size (`formatFileSize`), displaying metadata (`displayMetadata`), showing errors (`displayErrorMessage`), resetting output (`resetOutput`), simulating progress (`simulateProgress`), generating BMP files (`canvasToBMPBlob`), generating basic ICO files (`canvasToICOBlob`), and showing location on Leaflet map (`showLocationOnMap`).
 
 ## Data Flow
 1.  **User Upload:** User selects an image via file input or drag/drop.
@@ -103,7 +105,7 @@ This document provides a summary of the Image Converter application's structure 
 - **`exif-js` (v2.3.0):** Loaded via CDN. Used for reading EXIF metadata from images.
 - **Leaflet.js (v1.9.4):** Map library loaded via CDN (CSS and JS). Used with OpenStreetMap tiles to display map and marker based on extracted GPS coordinates. No API key required for basic usage.
 
-## Baseline State (Inherited from v1.0.1-beta)
+## Baseline State
 - Implementation of multiple themes (Dark, Light, Pastel) and theme toggling.
 - Addition of TIFF format conversion (using basic canvas `toBlob`).
 - Integration of `exif-js` for metadata display.
@@ -111,15 +113,16 @@ This document provides a summary of the Image Converter application's structure 
 - Refinement of file details display, including output size comparison.
 - Addition of placeholder UI elements and JS functions for future features (format-specific controls, sharing, map).
 - Introduction of a progress bar simulation.
-- Codebase located in the `1.0.2` directory.
 
-## Recent Significant Changes (v1.0.2)
-- **BMP Conversion:** Implemented BMP file generation using a custom JavaScript function (`canvasToBMPBlob`) that manually creates the necessary file headers and pixel data from the canvas. Replaced the placeholder in `formatConverters`.
-- **ICO Conversion (Basic):** Implemented basic ICO file generation (single 32x32, 32-bit image) using a custom JavaScript function (`canvasToICOBlob`) that manually creates the necessary file headers and pixel data. Replaced the placeholder in `formatConverters`.
+## Recent Significant Changes
+- **BMP Conversion:** Implemented BMP file generation using a custom JavaScript function (`canvasToBMPBlob`) that manually creates the necessary file headers and pixel data from the canvas.
+- **ICO Conversion (Basic):** Implemented basic ICO file generation (single 32x32, 32-bit image) by manually constructing the file headers and pixel data using a helper function (`canvasToICOBlob`).
 - **Format Controls Activation:** Added logic to the `formatSelect` event listener to display the corresponding format-specific control section (`#bmpControls`, `#icoControls`) and hide others when the format selection changes.
-- **GPS Map Display:** Replaced Google Maps with Leaflet.js and OpenStreetMap tiles. Added Leaflet CDN links to HTML. Updated `showLocationOnMap` function in JavaScript to use Leaflet API for map initialization, view setting, tile layer, and marker management. Removed Google Maps `initMap`.
+- **GPS Map Display:** Replaced Google Maps with Leaflet.js and OpenStreetMap tiles. Updated `showLocationOnMap` function in JavaScript to use Leaflet API for map initialization, view setting, tile layer, and marker management.
 - **Sharing Functionality:** Added Share button to HTML. Implemented Web Share API logic in JavaScript to share the converted file, with fallback to sharing the app URL.
-- **RAW File Support:** Attempted integration of `libraw-wasm` for decoding RAW files. Paused due to persistent API usage errors. The current code reflects the latest attempt using the factory -> new instance -> instance methods pattern.
+- **RAW File Support:** Integrated `libraw-wasm` for decoding RAW files. The `LibRaw` class is imported from `node_modules/libraw-wasm/dist/index.js` and directly instantiated. The `open()` and `imageData()` methods are used to process the RAW file buffer and retrieve image data.
+- **Material Design Styling:** Implemented a sleek and modern UI using Material Design principles, including updated typography (Roboto font), elevation (box-shadows), and refined component styling.
+- **Two-Column Layout:** Restructured the main content area to display input preview/details on the left and output preview/details on the right, with responsive stacking on smaller screens.
 
 ## User Feedback Integration and Its Impact on Development
 - (No specific user feedback integration noted in the current codebase analysis).

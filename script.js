@@ -1,6 +1,243 @@
-import LibRawFactory from './node_modules/libraw-wasm/dist/libraw.js'; // Import the factory function
+import LibRaw from './node_modules/libraw-wasm/dist/index.js'; // Import the LibRaw class from the main entry point
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Language data
+    const translations = {
+        en: {
+            headerTitle: "PixelForge",
+            headerSubtitle: "Your ultimate image manipulation tool",
+            uploadDragDrop: "Drag & Drop Images Here",
+            uploadButton: "Upload Image",
+            qualityLabel: "Quality:",
+            low: "Low",
+            medium: "Medium",
+            high: "High",
+            convert: "Convert",
+            download: "Download",
+            share: "Share",
+            bmpOptions: "BMP Options",
+            icoOptions: "ICO Options",
+            icoNote: "(Note: Currently generates only 32x32)",
+            jpgOptions: "JPG Options", // New
+            progressive: "Progressive", // New
+            pngOptions: "PNG Options", // New
+            interlaced: "Interlaced", // New
+            inputPreview: "Input Preview",
+            outputPreview: "Output Preview",
+            inputFileDetails: "Input File Details",
+            outputFileDetails: "Output File Details",
+            noFileSelected: "No file selected",
+            convertFileToSeeDetails: "Convert file to see details",
+            locationData: "Location Data",
+            shareResult: "Share Result",
+            footerDisclaimer: "Disclaimer: This tool is for personal use only. We do not store your images or data.",
+            footerRights: "&copy; 2025 PixelForge. All rights reserved.",
+            github: "GitHub",
+            linkedin: "LinkedIn",
+            contact: "Contact",
+            unsupportedFileType: "Unsupported file type: {type}. Please select an image or supported RAW file.",
+            noImageForConversion: "No image source available for conversion.",
+            noConvertedImage: "No converted image available to download.",
+            convertBeforeSharing: "Please convert an image first before sharing.",
+            shareError: "Could not share image: {message}",
+            shareLinkError: "Could not share link: {message}",
+            shareNotSupported: "Sharing is not supported by your browser.",
+            mapLoadError: "Map library failed to load.",
+            mapDisplayError: "Could not display location on map.",
+            rawProcessingError: "Failed to process RAW file: {message}",
+            bmpConversionFailed: "BMP conversion failed: {message}",
+            icoConversionFailed: "ICO conversion failed: {message}",
+            tiffConversionFailed: "TIFF conversion failed: Browser returned null blob.",
+            animatedWebpNotImplemented: "Animated WEBP conversion is not yet implemented.",
+            conversionFailed: "Conversion failed: Could not create image blob.",
+            conversionProcessError: "Error during conversion process: {message}",
+            errorInitializing: "Error initializing the application. Please check the console.",
+            fileReadError: "Error reading file for preview.",
+            imageLoadError: "Error loading image to extract metadata.",
+            exifExtractionFailed: "EXIF extraction failed: {message}",
+            fileTypeRaw: "RAW",
+            fileTypeDecodedRaw: "Decoded RAW",
+            fileTypeNA: "N/A",
+            sizeSaved: "(saved {size})",
+            sizeIncreased: "(increased by {size})",
+            conversionDate: "Conversion Date",
+            dimensions: "Dimensions",
+            aspectRatio: "Aspect Ratio",
+            fileType: "File Type",
+            fileSize: "File Size",
+            lastModified: "Last Modified",
+            location: "Location",
+            camera: "Camera",
+            exposure: "Exposure",
+            fStop: "F-Stop",
+            iso: "ISO",
+            focalLength: "Focal Length",
+            dateTaken: "Date Taken",
+            description: "Description",
+            copyright: "Copyright",
+            software: "Software",
+            name: "Name",
+            type: "Type",
+            size: "Size",
+            bitDepth: "Bit Depth",
+        },
+        es: {
+            headerTitle: "PixelForja",
+            headerSubtitle: "Tu herramienta definitiva de manipulación de imágenes",
+            uploadDragDrop: "Arrastra y suelta imágenes aquí",
+            uploadButton: "Subir Imagen",
+            qualityLabel: "Calidad:",
+            low: "Baja",
+            medium: "Media",
+            high: "Alta",
+            convert: "Convertir",
+            download: "Descargar",
+            share: "Compartir",
+            bmpOptions: "Opciones BMP",
+            icoOptions: "Opciones ICO",
+            icoNote: "(Nota: Actualmente solo genera 32x32)",
+            jpgOptions: "Opciones JPG", // New
+            progressive: "Progresivo", // New
+            pngOptions: "Opciones PNG", // New
+            interlaced: "Entrelazado", // New
+            inputPreview: "Vista Previa de Entrada",
+            outputPreview: "Vista Previa de Salida",
+            inputFileDetails: "Detalles del Archivo de Entrada",
+            outputFileDetails: "Detalles del Archivo de Salida",
+            noFileSelected: "Ningún archivo seleccionado",
+            convertFileToSeeDetails: "Convierte el archivo para ver los detalles",
+            locationData: "Datos de Ubicación",
+            shareResult: "Compartir Resultado",
+            footerDisclaimer: "Descargo de responsabilidad: Esta herramienta es solo para uso personal. No almacenamos tus imágenes ni datos.",
+            footerRights: "&copy; 2025 PixelForja. Todos los derechos reservados.",
+            github: "GitHub",
+            linkedin: "LinkedIn",
+            contact: "Contacto",
+            unsupportedFileType: "Tipo de archivo no compatible: {type}. Selecciona una imagen o un archivo RAW compatible.",
+            noImageForConversion: "No hay imagen disponible para la conversión.",
+            noConvertedImage: "No hay imagen convertida disponible para descargar.",
+            convertBeforeSharing: "Por favor, convierte una imagen antes de compartir.",
+            shareError: "No se pudo compartir la imagen: {message}",
+            shareLinkError: "No se pudo compartir el enlace: {message}",
+            shareNotSupported: "Compartir no es compatible con tu navegador.",
+            mapLoadError: "La biblioteca de mapas no se pudo cargar.",
+            mapDisplayError: "No se pudo mostrar la ubicación en el mapa.",
+            rawProcessingError: "Error al procesar el archivo RAW: {message}",
+            bmpConversionFailed: "La conversión a BMP falló: {message}",
+            icoConversionFailed: "La conversión a ICO falló: {message}",
+            tiffConversionFailed: "La conversión a TIFF falló: El navegador devolvió un blob nulo.",
+            animatedWebpNotImplemented: "La conversión a WEBP animado aún no está implementada.",
+            conversionFailed: "La conversión falló: No se pudo crear el blob de la imagen.",
+            conversionProcessError: "Error durante el proceso de conversión: {message}",
+            errorInitializing: "Error al inicializar la aplicación. Por favor, revisa la consola.",
+            fileReadError: "Error al leer el archivo para la vista previa.",
+            imageLoadError: "Error al cargar la imagen para extraer metadatos.",
+            exifExtractionFailed: "La extracción de EXIF falló: {message}",
+            fileTypeRaw: "RAW",
+            fileTypeDecodedRaw: "RAW Decodificado",
+            fileTypeNA: "N/A",
+            sizeSaved: "(ahorrado {size})",
+            sizeIncreased: "(aumentado en {size})",
+            conversionDate: "Fecha de Conversión",
+            dimensions: "Dimensiones",
+            aspectRatio: "Relación de Aspecto",
+            fileType: "Tipo de Archivo",
+            fileSize: "Tamaño del Archivo",
+            lastModified: "Última Modificación",
+            location: "Ubicación",
+            camera: "Cámara",
+            exposure: "Exposición",
+            fStop: "Apertura",
+            iso: "ISO",
+            focalLength: "Longitud Focal",
+            dateTaken: "Fecha de Toma",
+            description: "Descripción",
+            copyright: "Derechos de Autor",
+            software: "Software",
+            name: "Nombre",
+            type: "Tipo",
+            size: "Tamaño",
+            bitDepth: "Profundidad de Bits",
+        },
+        ro: {
+            headerTitle: "PixelForge",
+            headerSubtitle: "Instrumentul tău suprem de manipulare a imaginilor",
+            uploadDragDrop: "Trageți și plasați imagini aici",
+            uploadButton: "Încarcă imaginea",
+            qualityLabel: "Calitate:",
+            low: "Scăzută",
+            medium: "Medie",
+            high: "Ridicată",
+            convert: "Convertește",
+            download: "Descarcă",
+            share: "Partajează",
+            bmpOptions: "Opțiuni BMP",
+            icoOptions: "Opțiuni ICO",
+            icoNote: "(Notă: Generează momentan doar 32x32)",
+            inputPreview: "Previzualizare Intrare",
+            outputPreview: "Previzualizare Ieșire",
+            inputFileDetails: "Detalii Fișier Intrare",
+            outputFileDetails: "Detalii Fișier Ieșire",
+            noFileSelected: "Niciun fișier selectat",
+            convertFileToSeeDetails: "Convertește fișierul pentru a vedea detaliile",
+            locationData: "Date de Locație",
+            shareResult: "Partajează Rezultatul",
+            footerDisclaimer: "Declinarea responsabilității: Acest instrument este doar pentru uz personal. Nu stocăm imaginile sau datele tale.",
+            footerRights: "&copy; 2025 PixelForge. Toate drepturile rezervate.",
+            github: "GitHub",
+            linkedin: "LinkedIn",
+            contact: "Contact",
+            unsupportedFileType: "Tip de fișier neacceptat: {type}. Te rugăm să selectezi o imagine sau un fișier RAW acceptat.",
+            noImageForConversion: "Nicio sursă de imagine disponibilă pentru conversie.",
+            noConvertedImage: "Nicio imagine convertită disponibilă pentru descărcare.",
+            convertBeforeSharing: "Te rugăm să convertești o imagine înainte de a o partaja.",
+            shareError: "Nu s-a putut partaja imaginea: {message}",
+            shareLinkError: "Nu s-a putut partaja linkul: {message}",
+            shareNotSupported: "Partajarea nu este acceptată de browserul tău.",
+            mapLoadError: "Biblioteca de hărți nu s-a putut încărca.",
+            mapDisplayError: "Nu s-a putut afișa locația pe hartă.",
+            rawProcessingError: "Eroare la procesarea fișierului RAW: {message}",
+            bmpConversionFailed: "Conversia BMP a eșuat: {message}",
+            icoConversionFailed: "Conversia ICO a eșuat: {message}",
+            tiffConversionFailed: "Conversia TIFF a eșuat: Browserul a returnat un blob nul.",
+            animatedWebpNotImplemented: "Conversia WEBP animată nu este încă implementată.",
+            conversionFailed: "Conversia a eșuat: Nu s-a putut crea blob-ul imaginii.",
+            conversionProcessError: "Eroare în timpul procesului de conversie: {message}",
+            errorInitializing: "Eroare la inițializarea aplicației. Te rugăm să verifici consola.",
+            fileReadError: "Eroare la citirea fișierului pentru previzualizare.",
+            imageLoadError: "Eroare la încărcarea imaginii pentru extragerea metadatelor.",
+            exifExtractionFailed: "Extragerea EXIF a eșuat: {message}",
+            fileTypeRaw: "RAW",
+            fileTypeDecodedRaw: "RAW Decodat",
+            fileTypeNA: "N/A",
+            sizeSaved: "(salvat {size})",
+            sizeIncreased: "(crescut cu {size})",
+            conversionDate: "Data Conversiei",
+            dimensions: "Dimensiuni",
+            aspectRatio: "Raport de Aspect",
+            fileType: "Tip de Fișier",
+            fileSize: "Dimensiune Fișier",
+            lastModified: "Ultima Modificare",
+            location: "Locație",
+            camera: "Cameră",
+            exposure: "Expunere",
+            fStop: "Diafragmă",
+            iso: "ISO",
+            focalLength: "Distanță Focală",
+            dateTaken: "Data Capturii",
+            description: "Descriere",
+            copyright: "Drepturi de Autor",
+            software: "Software",
+            name: "Nume",
+            type: "Tip",
+            size: "Dimensiune",
+            bitDepth: "Adâncime de Biți",
+        }
+    };
+
+    const languageOrder = ['en', 'es', 'ro']; // Removed 'fr', 'de'
+    let currentLanguageIndex = 0;
+
     // DOM Elements - Check for existence
     const uploadInput = document.getElementById('uploadInput');
     const formatSelect = document.getElementById('formatSelect');
@@ -14,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputMetadata = document.getElementById('inputMetadata');
     const outputMetadata = document.getElementById('outputMetadata');
     const themeToggle = document.getElementById('themeToggle');
+    const languageToggle = document.getElementById('languageToggle'); // New language toggle
     const mapContainer = document.getElementById('mapContainer');
     const mapElement = document.getElementById('map'); // Needed for Leaflet init
     const dropZone = document.getElementById('dropZone');
@@ -21,15 +259,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const qualityValue = document.getElementById('qualityValue');
     const bmpControls = document.getElementById('bmpControls');
     const icoControls = document.getElementById('icoControls');
+    const jpgControls = document.getElementById('jpgControls'); // New
+    const pngControls = document.getElementById('pngControls'); // New
     const shareBtn = document.getElementById('shareBtn');
 
     // Check if essential elements exist
     if (!uploadInput || !formatSelect || !convertBtn || !downloadBtn || !progressBar ||
         !inputPreview || !outputPreview || !inputDetails || !outputDetails || !inputMetadata ||
-        !outputMetadata || !themeToggle || !mapContainer || !mapElement || !dropZone ||
-        !qualitySlider || !qualityValue || !shareBtn) {
+        !outputMetadata || !themeToggle || !languageToggle || !mapContainer || !mapElement || !dropZone ||
+        !qualitySlider || !qualityValue || !bmpControls || !icoControls || !jpgControls || !pngControls || !shareBtn) { // Updated check
         console.error("Initialization failed: One or more essential DOM elements not found.");
-        alert("Error initializing the application. Please check the console.");
+        alert(translations[localStorage.getItem('appLanguage') || 'en'].errorInitializing); // Translated error
         return; // Stop execution if critical elements are missing
     }
 
@@ -43,6 +283,65 @@ document.addEventListener('DOMContentLoaded', () => {
     // Known RAW file extensions (add more as needed)
     const RAW_EXTENSIONS = ['cr2', 'nef', 'arw', 'dng', 'orf', 'raf', 'rw2', 'pef', 'srw'];
 
+    // Language Toggle
+    languageToggle.addEventListener('click', () => {
+        currentLanguageIndex = (currentLanguageIndex + 1) % languageOrder.length;
+        const newLang = languageOrder[currentLanguageIndex];
+        localStorage.setItem('appLanguage', newLang); // Save preference
+        updateLanguage(newLang);
+    });
+
+    // Function to update UI text based on language
+    function updateLanguage(lang) {
+        const t = translations[lang];
+        if (!t) {
+            console.error(`Translations for language '${lang}' not found.`);
+            return;
+        }
+
+        // Update elements with data-i18n attribute
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (t[key]) {
+                element.textContent = t[key];
+            }
+        });
+
+        // Update specific elements not covered by data-i18n (or for robustness)
+        document.title = t.headerTitle; // Update page title
+        document.querySelector('.app-header h1').textContent = t.headerTitle;
+        document.querySelector('.app-header p').textContent = t.headerSubtitle;
+        document.querySelector('#dropZone p').textContent = t.uploadDragDrop;
+        document.querySelector('#uploadInput + .btn').textContent = t.uploadButton; // "Upload Image" button
+        document.querySelector('label[for="qualitySlider"]').textContent = t.qualityLabel;
+        document.querySelector('.preset-btn[data-quality="30"]').textContent = t.low;
+        document.querySelector('.preset-btn[data-quality="60"]').textContent = t.medium;
+        document.querySelector('.preset-btn[data-quality="92"]').textContent = t.high;
+        convertBtn.textContent = t.convert;
+        downloadBtn.textContent = t.download;
+        shareBtn.textContent = t.share;
+        document.querySelector('#bmpControls h4').textContent = t.bmpOptions;
+        document.querySelector('#icoControls h4').textContent = t.icoOptions;
+        document.querySelector('#icoControls p').textContent = t.icoNote;
+        document.querySelector('#mapContainer h4').textContent = t.locationData;
+        // Removed: document.querySelector('.sharing-controls h4').textContent = t.shareResult; // sharing-controls div no longer exists
+        document.querySelector('.app-footer p:nth-child(1)').textContent = t.footerRights;
+        document.querySelector('.app-footer p:nth-child(2)').textContent = t.footerDisclaimer;
+        document.querySelector('.contact-icons a:nth-child(1)').textContent = t.github;
+        document.querySelector('.contact-icons a:nth-child(2)').textContent = t.linkedin;
+        document.querySelector('.contact-icons a:nth-child(3)').textContent = t.contact;
+
+        // Update language toggle button text
+        languageToggle.textContent = lang.toUpperCase();
+    }
+
+    // Set initial language on load
+    const savedLanguage = localStorage.getItem('appLanguage');
+    if (savedLanguage && languageOrder.includes(savedLanguage)) {
+        currentLanguageIndex = languageOrder.indexOf(savedLanguage);
+    }
+    updateLanguage(languageOrder[currentLanguageIndex]);
+
     // Format Converters
     const formatConverters = {
        ico: async (canvas, options) => {
@@ -55,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return blob;
             } catch (error) {
                 console.error('ICO conversion failed:', error);
-                throw new Error(`ICO conversion failed: ${error.message}`);
+                throw new Error(translations[localStorage.getItem('appLanguage') || 'en'].icoConversionFailed.replace('{message}', error.message));
             }
         },
         tiff: async (canvas, options) => {
@@ -69,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             resolve(blob);
                         } else {
                              console.error('TIFF conversion failed: canvas.toBlob returned null.');
-                             reject(new Error('TIFF conversion failed: Browser returned null blob.'));
+                             reject(new Error(translations[localStorage.getItem('appLanguage') || 'en'].tiffConversionFailed));
                         }
                     }, 'image/tiff');
                 } catch (error) {
@@ -87,14 +386,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return blob;
             } catch (error) {
                 console.error('BMP conversion failed:', error);
-                throw new Error(`BMP conversion failed: ${error.message}`);
+                throw new Error(translations[localStorage.getItem('appLanguage') || 'en'].bmpConversionFailed.replace('{message}', error.message));
             }
         },
         'webp-animated': async (canvas, options) => {
             // Placeholder - Requires a library like libwebp.js or similar
             console.log('Animated WEBP conversion with options:', options);
-            displayErrorMessage('Animated WEBP conversion is not yet implemented.');
-            return Promise.reject(new Error('Animated WEBP conversion is not yet implemented.'));
+            displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].animatedWebpNotImplemented);
+            return Promise.reject(new Error(translations[localStorage.getItem('appLanguage') || 'en'].animatedWebpNotImplemented));
         }
     };
 
@@ -112,6 +411,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'ico':
                 if (icoControls) icoControls.style.display = 'block';
+                break;
+            case 'jpg':
+                if (jpgControls) jpgControls.style.display = 'block';
+                break;
+            case 'png':
+                if (pngControls) pngControls.style.display = 'block';
                 break;
             default:
                 break;
@@ -199,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayInputPreview(file); // Standard image preview (async internally)
             convertBtn.disabled = false;
         } else {
-            displayErrorMessage(`Unsupported file type: ${file.type || 'Unknown'}. Please select an image or supported RAW file.`);
+            displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].unsupportedFileType.replace('{type}', file.type || 'Unknown'));
             uploadedFile = null; // Clear invalid file
         }
     }
@@ -216,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Display basic file info immediately
         const basicMetadata = {
-            'File Type': file.type || 'RAW', // Use file type or generic RAW
+            'File Type': file.type || translations[localStorage.getItem('appLanguage') || 'en'].fileTypeRaw, // Use file type or generic RAW
             'File Size': formatFileSize(file.size),
             'Last Modified': new Date(file.lastModified).toLocaleString(),
         };
@@ -258,40 +563,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             progressBar.style.width = '30%';
 
-            // Initialize the LibRaw module using the factory
-            console.log("Initializing LibRaw module...");
-            const LibRawModule = await LibRawFactory({
-                wasmPath: './node_modules/libraw-wasm/dist/libraw.wasm' // Path relative to script.js
-            });
-            console.log("LibRaw module initialized.");
+            console.log("Initializing LibRaw instance...");
+            const librawInstance = new LibRaw(); // Direct instantiation of the LibRaw class
+            console.log("LibRaw instance created.");
 
-            // Check if the module loaded correctly and has the constructor
-            if (!LibRawModule || typeof LibRawModule.LibRaw !== 'function') {
-                throw new Error('RAW decoding library (LibRaw.js) loaded, but LibRaw constructor not found.');
-            }
-
-            // Instantiate using the constructor from the resolved module (no options)
-            const librawInstance = new LibRawModule.LibRaw();
-            console.log("LibRaw instance created using 'new' (no options).");
-
-            // Call methods on the instance itself
-            await librawInstance.openBuffer(buffer);
-            console.log("LibRaw buffer opened.");
+            // Open (decode) the RAW file
+            await librawInstance.open(new Uint8Array(buffer));
+            console.log("LibRaw file opened.");
             progressBar.style.width = '50%';
 
-            await librawInstance.unpack();
-            console.log("LibRaw data unpacked.");
+            const imgData = await librawInstance.imageData();
+            console.log("LibRaw image data fetched:", imgData);
             progressBar.style.width = '70%';
-
-            const imgData = await librawInstance.renderImage();
-            console.log("LibRaw image rendered to ImageData:", imgData);
-            progressBar.style.width = '90%';
 
             rawCanvas = document.createElement('canvas');
             rawCanvas.width = imgData.width;
             rawCanvas.height = imgData.height;
             const ctx = rawCanvas.getContext('2d');
-            ctx.putImageData(imgData, 0, 0);
+            // Convert RGB (3 bytes per pixel) to RGBA (4 bytes per pixel) for ImageData
+            const rgbaData = new Uint8ClampedArray(imgData.width * imgData.height * 4);
+            for (let i = 0, j = 0; i < imgData.data.length; i += 3, j += 4) {
+                rgbaData[j] = imgData.data[i];     // R
+                rgbaData[j + 1] = imgData.data[i + 1]; // G
+                rgbaData[j + 2] = imgData.data[i + 2]; // B
+                rgbaData[j + 3] = 255;             // A (full opacity)
+            }
+            const imageDataObj = new ImageData(rgbaData, imgData.width, imgData.height);
+            ctx.putImageData(imageDataObj, 0, 0);
             console.log("Decoded RAW data drawn to rawCanvas.");
 
             inputPreview.src = rawCanvas.toDataURL('image/png');
@@ -307,12 +605,12 @@ document.addEventListener('DOMContentLoaded', () => {
             convertBtn.disabled = false;
             progressBar.style.width = '100%';
 
-            librawInstance.recycle(); // Call recycle on the instance
-            console.log("LibRaw instance recycled.");
+            // librawInstance.recycle(); // Resource management is handled internally by the worker
+            // console.log("LibRaw instance recycled.");
 
         } catch (error) { // Catch for the main RAW processing try block
             console.error("Error processing RAW file:", error);
-            displayErrorMessage(`Failed to process RAW file: ${error.message || error}`);
+            displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].rawProcessingError.replace('{message}', error.message || error));
             resetOutput();
             uploadedFile = null;
             convertBtn.disabled = true;
@@ -323,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Convert Handler
     convertBtn.addEventListener('click', () => {
         if (!uploadedFile) {
-            displayErrorMessage('Please upload an image first.');
+            displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].noImageForConversion);
             return;
         }
         // Use rawCanvas if it exists (meaning input was RAW), otherwise use the original uploaded file
@@ -334,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Download Handler
     downloadBtn.addEventListener('click', () => {
         if (!convertedBlob || !uploadedFile) {
-             displayErrorMessage('No converted image available to download.');
+             displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].noConvertedImage);
              return;
         }
         const link = document.createElement('a');
@@ -351,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (shareBtn) {
         shareBtn.addEventListener('click', async () => {
             if (!convertedBlob || !uploadedFile) {
-                displayErrorMessage('Please convert an image first before sharing.');
+                displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].convertBeforeSharing);
                 return;
             }
             const format = formatSelect.value;
@@ -371,14 +669,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (error) {
                     console.error('Error sharing image:', error);
                     if (error.name !== 'AbortError') {
-                         displayErrorMessage(`Could not share image: ${error.message}`);
+                         displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].shareError.replace('{message}', error.message));
                     }
                 }
             } else if (navigator.share) {
                  console.warn("File sharing might not be supported, attempting to share text/URL.");
                  try {
                      await navigator.share({
-                         title: 'Image Converter',
+                         title: translations[localStorage.getItem('appLanguage') || 'en'].headerTitle,
                          text: `I used this Image Converter!`,
                          url: window.location.href
                      });
@@ -386,12 +684,12 @@ document.addEventListener('DOMContentLoaded', () => {
                  } catch (error) {
                      console.error('Error sharing link:', error);
                      if (error.name !== 'AbortError') {
-                         displayErrorMessage(`Could not share link: ${error.message}`);
+                         displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].shareLinkError.replace('{message}', error.message));
                      }
                  }
             } else {
                 console.warn('Web Share API not supported in this browser.');
-                displayErrorMessage('Sharing is not supported by your browser.');
+                displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].shareNotSupported);
             }
         });
     }
@@ -406,7 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
             extractMetadata(file);
         };
         reader.onerror = () => {
-             displayErrorMessage('Error reading file for preview.');
+             displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].fileReadError);
         };
         reader.readAsDataURL(file);
     }
@@ -430,12 +728,12 @@ document.addEventListener('DOMContentLoaded', () => {
              console.log("Skipping metadata extraction for non-File input (likely decoded RAW).");
              // Basic dimensions might be available from rawCanvas if needed, but EXIF won't work here.
              const basicMetadata = {
-                 'Dimensions': `${file.width} × ${file.height} px`, // Assuming file is rawCanvas
-                 'File Type': 'Decoded RAW'
+                 [translations[localStorage.getItem('appLanguage') || 'en'].dimensions]: `${file.width} × ${file.height} px`, // Assuming file is rawCanvas
+                 [translations[localStorage.getItem('appLanguage') || 'en'].fileType]: translations[localStorage.getItem('appLanguage') || 'en'].fileTypeDecodedRaw
              };
              displayMetadata(inputMetadata, basicMetadata);
              // updateFileDetails might need adjustment if original filename isn't available
-             updateFileDetails(inputDetails, { name: uploadedFile?.name || 'RAW Image', type: 'Decoded RAW', size: 0 }); // Use original filename if possible
+             updateFileDetails(inputDetails, { name: uploadedFile?.name || translations[localStorage.getItem('appLanguage') || 'en'].fileTypeRaw + ' Image', type: translations[localStorage.getItem('appLanguage') || 'en'].fileTypeDecodedRaw, size: 0 }); // Use original filename if possible
              return Promise.resolve(basicMetadata);
         }
 
@@ -445,11 +743,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const img = new Image();
             img.onload = async () => {
                 const basicMetadata = {
-                    'Dimensions': `${img.width} × ${img.height} px`,
-                    'Aspect Ratio': (img.width / img.height).toFixed(2),
-                    'File Type': file.type,
-                    'File Size': formatFileSize(file.size),
-                    'Last Modified': new Date(file.lastModified).toLocaleString(),
+                    [translations[localStorage.getItem('appLanguage') || 'en'].dimensions]: `${img.width} × ${img.height} px`,
+                    [translations[localStorage.getItem('appLanguage') || 'en'].aspectRatio]: (img.width / img.height).toFixed(2),
+                    [translations[localStorage.getItem('appLanguage') || 'en'].fileType]: file.type,
+                    [translations[localStorage.getItem('appLanguage') || 'en'].fileSize]: formatFileSize(file.size),
+                    [translations[localStorage.getItem('appLanguage') || 'en'].lastModified]: new Date(file.lastModified).toLocaleString(),
                 };
                 displayMetadata(inputMetadata, basicMetadata);
                 updateFileDetails(inputDetails, file);
@@ -462,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (typeof exifData.latitude === 'number' && typeof exifData.longitude === 'number') {
                         console.log("Attempting to show location on map.");
                         showLocationOnMap(exifData.latitude, exifData.longitude);
-                        combinedMetadata['Location'] = `${exifData.latitude.toFixed(6)}, ${exifData.longitude.toFixed(6)}`;
+                        combinedMetadata[translations[localStorage.getItem('appLanguage') || 'en'].location] = `${exifData.latitude.toFixed(6)}, ${exifData.longitude.toFixed(6)}`;
                     } else {
                         console.log("No valid GPS data found in EXIF.");
                         if (mapContainer) mapContainer.style.display = 'none';
@@ -476,7 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
             img.onerror = (error) => {
-                displayErrorMessage('Error loading image to extract metadata.');
+                displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].imageLoadError);
                 console.error('Image load error:', error);
                 resolve({});
             };
@@ -491,22 +789,24 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.onload = function() {
                 try {
                     const tags = EXIF.getAllTags(this);
-                    console.log('Raw EXIF tags:', tags);
-                    const exifData = {};
-                    if (!tags || Object.keys(tags).length === 0) {
-                        console.warn('No EXIF data found.');
-                        resolve(exifData); return;
-                    }
-                    if (tags.Make || tags.Model) exifData['Camera'] = `${tags.Make || ''} ${tags.Model || ''}`.trim();
-                    if (tags.ExposureTime) exifData['Exposure'] = tags.ExposureTime < 1 ? `1/${Math.round(1/tags.ExposureTime)}` : tags.ExposureTime.toString();
-                    if (tags.FNumber) exifData['F-Stop'] = `f/${tags.FNumber}`;
-                    if (tags.ISOSpeedRatings) exifData['ISO'] = tags.ISOSpeedRatings.toString();
-                    if (tags.FocalLength) exifData['Focal Length'] = `${Math.round(tags.FocalLength.numerator / tags.FocalLength.denominator)}mm`;
-                    if (tags.DateTimeOriginal) exifData['Date Taken'] = new Date(tags.DateTimeOriginal).toLocaleString();
-                    if (tags.ImageDescription) exifData['Description'] = tags.ImageDescription;
-                    if (tags.Copyright) exifData['Copyright'] = tags.Copyright;
-                    if (tags.Software) exifData['Software'] = tags.Software;
+                    console.log('Raw EXIF tags (all):', tags); // Log all tags for debugging
+                    
+                    // Create a new object to hold all tags, including formatted ones
+                    const allExifData = {};
 
+                    // Add basic formatted tags if they exist
+                    const currentLang = localStorage.getItem('appLanguage') || 'en';
+                    if (tags.Make || tags.Model) allExifData[translations[currentLang].camera] = `${tags.Make || ''} ${tags.Model || ''}`.trim();
+                    if (tags.ExposureTime) allExifData[translations[currentLang].exposure] = tags.ExposureTime < 1 ? `1/${Math.round(1/tags.ExposureTime)}` : tags.ExposureTime.toString();
+                    if (tags.FNumber) allExifData[translations[currentLang].fStop] = `f/${tags.FNumber}`;
+                    if (tags.ISOSpeedRatings) allExifData[translations[currentLang].iso] = tags.ISOSpeedRatings.toString();
+                    if (tags.FocalLength) allExifData[translations[currentLang].focalLength] = `${Math.round(tags.FocalLength.numerator / tags.FocalLength.denominator)}mm`;
+                    if (tags.DateTimeOriginal) allExifData[translations[currentLang].dateTaken] = new Date(tags.DateTimeOriginal).toLocaleString();
+                    if (tags.ImageDescription) allExifData[translations[currentLang].description] = tags.ImageDescription;
+                    if (tags.Copyright) allExifData[translations[currentLang].copyright] = tags.Copyright;
+                    if (tags.Software) allExifData[translations[currentLang].software] = tags.Software;
+
+                    // Handle GPS data
                     if (tags.GPSLatitude && tags.GPSLongitude) {
                         console.log("Raw GPSLatitude:", tags.GPSLatitude, "Raw GPSLongitude:", tags.GPSLongitude);
                         try {
@@ -514,12 +814,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             console.log("Parsed latLng:", latLng);
                             if (latLng && typeof latLng.latitude === 'number' && !isNaN(latLng.latitude) && typeof latLng.longitude === 'number' && !isNaN(latLng.longitude)) {
                                 console.log("Valid GPS coordinates found:", latLng.latitude, latLng.longitude);
-                                exifData.latitude = latLng.latitude;
-                                exifData.longitude = latLng.longitude;
+                                allExifData.latitude = latLng.latitude; // Store for map display
+                                allExifData.longitude = latLng.longitude; // Store for map display
+                                allExifData[translations[currentLang].location] = `${latLng.latitude.toFixed(6)}, ${latLng.longitude.toFixed(6)}`; // Formatted for display
                             } else { console.warn("Parsed latLng object invalid or contains NaN values."); }
                         } catch (gpsError) { console.warn('Error parsing GPS data with EXIF.getLatLng:', gpsError); }
                     } else { console.log("GPSLatitude or GPSLongitude tags not found."); }
-                    resolve(exifData);
+
+                    // Merge all raw tags into the result, overwriting if a formatted version exists
+                    // This ensures all tags are present, with preference for formatted ones if created above
+                    for (const key in tags) {
+                        if (tags.hasOwnProperty(key) && !allExifData.hasOwnProperty(key)) {
+                            allExifData[key] = tags[key];
+                        }
+                    }
+
+                    resolve(allExifData);
                 } catch (error) {
                     console.error('Error processing EXIF tags:', error);
                     resolve({});
@@ -537,7 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("showLocationOnMap (Leaflet) called with:", lat, lng);
         if (typeof L === 'undefined') {
             console.error("Leaflet library (L) not loaded.");
-            displayErrorMessage("Map library failed to load.");
+            displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].mapLoadError);
             return;
         }
         const mapElement = document.getElementById('map');
@@ -580,22 +890,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 10);
         } catch (error) {
             console.error("Error showing location on Leaflet map:", error);
-            displayErrorMessage("Could not display location on map.");
+            displayErrorMessage(translations[localStorage.getItem('appLanguage') || 'en'].mapDisplayError);
             mapContainer.style.display = 'none';
         }
     }
 
     function displayMetadata(element, metadata) {
         let html = '<table>';
-        const displayOrder = ['Dimensions', 'Aspect Ratio', 'File Type', 'File Size', 'Last Modified', 'Location', 'Camera', 'Exposure', 'F-Stop', 'ISO', 'Focal Length', 'Date Taken', 'Description', 'Copyright', 'Software'];
-        displayOrder.forEach(key => {
-             if (metadata[key] && key !== 'latitude' && key !== 'longitude') {
-                 html += `<tr><td>${key}:</td><td>${metadata[key]}</td></tr>`;
-             }
+        // Prioritize some common metadata for better readability
+        const currentLang = localStorage.getItem('appLanguage') || 'en';
+        const t = translations[currentLang];
+        const prioritizedKeys = [t.dimensions, t.aspectRatio, t.fileType, t.fileSize, t.lastModified, t.location, t.camera, t.exposure, t.fStop, t.iso, t.focalLength, t.dateTaken, t.description, t.copyright, t.software];
+        const displayedKeys = new Set();
+
+        // Display prioritized keys first
+        prioritizedKeys.forEach(key => {
+            // Check original English key for latitude/longitude exclusion
+            const originalKey = Object.keys(t).find(k => t[k] === key);
+            if (metadata[key] !== undefined && originalKey !== 'latitude' && originalKey !== 'longitude') {
+                html += `<tr><td>${key}:</td><td>${metadata[key]}</td></tr>`;
+                displayedKeys.add(key);
+            }
         });
-        for (const [key, value] of Object.entries(metadata)) {
-            if (!displayOrder.includes(key) && key !== 'latitude' && key !== 'longitude') {
-                 html += `<tr><td>${key}:</td><td>${value}</td></tr>`;
+
+        // Display all other EXIF tags
+        for (const key in metadata) {
+            // Check original English key for latitude/longitude exclusion
+            const originalKey = Object.keys(t).find(k => t[k] === key);
+            if (metadata.hasOwnProperty(key) && !displayedKeys.has(key) && originalKey !== 'latitude' && originalKey !== 'longitude') {
+                let value = metadata[key];
+                // Basic formatting for common EXIF types if needed
+                if (typeof value === 'object' && value !== null && value.numerator !== undefined && value.denominator !== undefined) {
+                    // Handle rational numbers (e.g., ExposureTime, FNumber, FocalLength)
+                    value = `${value.numerator}/${value.denominator}`;
+                } else if (Array.isArray(value)) {
+                    value = value.join(', ');
+                }
+                html += `<tr><td>${key}:</td><td>${value}</td></tr>`;
             }
         }
         html += '</table>';
@@ -614,17 +945,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateFileDetails(element, file) {
+        const currentLang = localStorage.getItem('appLanguage') || 'en';
+        const t = translations[currentLang];
         element.innerHTML = `
-            <strong>Name:</strong> ${file.name}<br>
-            <strong>Type:</strong> ${file.type || 'N/A'}<br> <!-- Handle potentially missing type -->
-            <strong>Size:</strong> ${formatFileSize(file.size)}
+            <strong>${t.name}:</strong> ${file.name}<br>
+            <strong>${t.type}:</strong> ${file.type || t.fileTypeNA}<br> <!-- Handle potentially missing type -->
+            <strong>${t.size}:</strong> ${formatFileSize(file.size)}
         `;
     }
 
     function resetOutput() {
+        const currentLang = localStorage.getItem('appLanguage') || 'en';
+        const t = translations[currentLang];
         outputPreview.src = '';
         outputPreview.style.display = 'none';
-        outputDetails.textContent = 'Convert file to see details';
+        outputDetails.textContent = t.convertFileToSeeDetails;
         outputMetadata.innerHTML = '';
         downloadBtn.disabled = true;
         if (shareBtn) shareBtn.disabled = true;
@@ -639,8 +974,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function convertImage(source, format) { // Source can be File or Canvas
+        const currentLang = localStorage.getItem('appLanguage') || 'en';
+        const t = translations[currentLang];
         if (!source) {
-            displayErrorMessage('No image source available for conversion.');
+            displayErrorMessage(t.noImageForConversion);
             return;
         }
         progressBar.style.width = '0';
@@ -683,20 +1020,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     blob = await formatConverters[format](canvasToConvert, options);
                 } catch (error) {
-                    displayErrorMessage(`Error converting to ${format.toUpperCase()}: ${error.message}`);
+                    displayErrorMessage(t.conversionFailed.replace('{message}', error.message));
                     progressBar.style.width = '0%'; return;
                 }
             } else {
+                const options = getFormatOptions(format); // Get options for native formats too
+                let toBlobOptions = { quality: quality };
+
+                if (format === 'jpg' && options.progressive !== undefined) {
+                    toBlobOptions.progressive = options.progressive;
+                } else if (format === 'png' && options.interlaced !== undefined) {
+                    toBlobOptions.interlaced = options.interlaced;
+                }
+
                 blob = await new Promise((resolve, reject) => {
                      canvasToConvert.toBlob((b) => {
                          if (b) resolve(b);
-                         else reject(new Error(`canvas.toBlob returned null for ${format}`));
-                     }, `image/${format}`, quality);
+                         else reject(new Error(t.conversionFailed));
+                     }, `image/${format}`, toBlobOptions); // Pass options object
                 });
             }
 
             if (!blob) {
-                displayErrorMessage('Conversion failed: Could not create image blob.');
+                displayErrorMessage(t.conversionFailed);
                  progressBar.style.width = '0%'; return;
             }
 
@@ -717,18 +1063,18 @@ document.addEventListener('DOMContentLoaded', () => {
             let sizeComparisonText = formatFileSize(convertedFileSize);
             if (originalFileSize > 0) { // Only show comparison if original size is known
                  const sizeDifference = originalFileSize - convertedFileSize;
-                 if (sizeDifference > 0) { sizeComparisonText += ` (saved ${formatFileSize(sizeDifference)})`; }
-                 else if (sizeDifference < 0) { sizeComparisonText += ` (increased by ${formatFileSize(Math.abs(sizeDifference))})`; }
+                 if (sizeDifference > 0) { sizeComparisonText += ` ${t.sizeSaved.replace('{size}', formatFileSize(sizeDifference))}`; }
+                 else if (sizeDifference < 0) { sizeComparisonText += ` ${t.sizeIncreased.replace('{size}', formatFileSize(Math.abs(sizeDifference)))}`; }
             }
-            const detailsContent = `<strong>Name:</strong> ${convertedFile.name}<br><strong>Type:</strong> ${convertedFile.type}<br><strong>Size:</strong> ${sizeComparisonText}`;
+            const detailsContent = `<strong>${t.name}:</strong> ${convertedFile.name}<br><strong>${t.type}:</strong> ${convertedFile.type}<br><strong>${t.size}:</strong> ${sizeComparisonText}`;
             outputDetails.innerHTML = detailsContent;
 
             const outputMeta = {
-                'Dimensions': `${canvasToConvert.width} × ${canvasToConvert.height} px`, // Use canvas dimensions
-                'Aspect Ratio': (canvasToConvert.width / canvasToConvert.height).toFixed(2),
-                'File Type': blob.type || `image/${format}`,
-                'File Size': formatFileSize(blob.size),
-                'Conversion Date': new Date().toLocaleString()
+                [t.dimensions]: `${canvasToConvert.width} × ${canvasToConvert.height} px`, // Use canvas dimensions
+                [t.aspectRatio]: (canvasToConvert.width / canvasToConvert.height).toFixed(2),
+                [t.fileType]: blob.type || `image/${format}`,
+                [t.fileSize]: formatFileSize(blob.size),
+                [t.conversionDate]: new Date().toLocaleString()
             };
             displayMetadata(outputMetadata, outputMeta);
 
@@ -737,17 +1083,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (shareBtn) shareBtn.disabled = false;
 
         } catch (error) {
-            displayErrorMessage(`Error during conversion process: ${error.message}`);
+            displayErrorMessage(t.conversionProcessError.replace('{message}', error.message));
              progressBar.style.width = '0%';
         }
     }
 
      function getFormatOptions(format) {
         let options = {};
+        const currentLang = localStorage.getItem('appLanguage') || 'en';
+        const t = translations[currentLang];
          try {
             switch (format) {
-                case 'ico': break; // No UI options yet
-                case 'bmp': options.bitDepth = 24; break; // Only 24-bit supported
+                case 'ico':
+                    // No UI options yet for ICO beyond fixed size
+                    break;
+                case 'bmp':
+                    options.bitDepth = 24; // Only 24-bit supported for now
+                    break;
+                case 'jpg':
+                    const jpgProgressiveCheckbox = document.getElementById('jpgProgressive');
+                    if (jpgProgressiveCheckbox) {
+                        options.progressive = jpgProgressiveCheckbox.checked;
+                    }
+                    break;
+                case 'png':
+                    const pngInterlacedCheckbox = document.getElementById('pngInterlaced');
+                    if (pngInterlacedCheckbox) {
+                        options.interlaced = pngInterlacedCheckbox.checked;
+                    }
+                    break;
+                // Add other formats here
             }
         } catch (error) { console.error(`Error getting format options for ${format}:`, error); }
         return options;
@@ -813,8 +1178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let y = size - 1; y >= 0; y--) {
                     for (let x = 0; x < size; x++) {
                         const index = (y * size + x) * 4;
-                        view.setUint8(pixelDataPos++, data[index + 2]); view.setUint8(pixelDataPos++, data[index + 1]);
-                        view.setUint8(pixelDataPos++, data[index]); view.setUint8(pixelDataPos++, data[index + 3]);
+                        view.setUint8(pixelDataPos++, data[index + 2]); view.setUint8(pixelDataPos++, data[index + 1]); view.setUint8(pixelDataPos++, data[index]);
                     }
                 }
                 pos = pixelDataPos;

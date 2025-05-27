@@ -11,27 +11,27 @@ body {
 
 /* Define Pantone color variables */
 :root {
-  --cannoli-cream: #f6f1e5;
-  --cream-tan: #eed9c4;
-  --safari: #d7c0ae;
-  --sirocco: #c8b4a1;
-  --mocha-mousse: #987654;
-  --chanterelle: #c39475;
-  --baltic-amber: #b46539;
-  --chocolate-martini: #5e3a2f;
-  --tendril: #d3c499;
-  --cornflower-blue: #91a8d0;
-  --viola: #947eb0;
-  --rose-tan: #d5a783;
-  --cobblestone: #999185;
-  --willow: #85997b;
-  --gardenia: #f2e8c4;
+    --cannoli-cream: #f6f1e5;
+    --cream-tan: #eed9c4;
+    --safari: #d7c0ae;
+    --sirocco: #c8b4a1;
+    --mocha-mousse: #987654;
+    --chanterelle: #c39475;
+    --baltic-amber: #b46539;
+    --chocolate-martini: #5e3a2f;
+    --tendril: #d3c499;
+    --cornflower-blue: #91a8d0;
+    --viola: #947eb0;
+    --rose-tan: #d5a783;
+    --cobblestone: #999185;
+    --willow: #85997b;
+    --gardenia: #f2e8c4;
 }
 
 /* Themes */
 body.dark-theme {
-  background-color: var(--chocolate-martini);
-  color: var(--cannoli-cream);
+    background-color: var(--chocolate-martini);
+    color: var(--cannoli-cream);
 }
 
 body.dark-theme .btn {
@@ -81,19 +81,19 @@ body.dark-theme .drop-zone.dragover {
 }
 
 body.dark-theme .format-controls {
-    background-color: var(--mocha-mousse);
+    background-color: #2d2d2d;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-theme .format-specific-control h4 {
-    color: var(--cream-tan);
+    color: #f4f4f4;
 }
 
 body.dark-theme .control-group select,
 body.dark-theme .control-group input[type="number"] {
-    background-color: var(--chocolate-martini);
-    border-color: var(--safari);
-    color: var(--cream-tan);
+    background-color: #1a1a1a;
+    border-color: #444;
+    color: #f4f4f4;
 }
 
 body.dark-theme .preset-btn {
@@ -111,36 +111,36 @@ body.dark-theme .preset-btn.selected {
 }
 
 body.dark-theme .metadata-section {
-    border-top-color: var(--safari);
+    border-top-color: #444;
 }
 
 body.dark-theme .map-container {
-    background-color: var(--mocha-mousse);
+    background-color: #2d2d2d;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-theme .map-container h4 {
-    color: var(--cream-tan);
+    color: #f4f4f4;
 }
 
 body.dark-theme .preview-image {
-    border-color: var(--safari);
-    background-color: var(--mocha-mousse);
+    border-color: #444;
+    background-color: #2d2d2d;
 }
 
 body.dark-theme .sharing-controls {
-    border-top-color: var(--safari);
+    border-top-color: #444;
 }
 
 body.dark-theme .sharing-controls h4 {
-    color: var(--cream-tan);
+    color: #f4f4f4;
 }
 
 body.dark-theme .share-message textarea,
 body.dark-theme .share-link input {
-    background-color: var(--chocolate-martini);
-    border-color: var(--safari);
-    color: var(--cream-tan);
+    background-color: #1a1a1a;
+    border-color: #444;
+    color: #f4f4f4;
 }
 
 /* Light Theme */
@@ -186,19 +186,19 @@ body.light-theme .drop-zone.dragover {
 }
 
 body.light-theme .format-controls {
-    background-color: var(--cream-tan);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff8f8;
+    box-shadow: 0 2px 10px rgba(106, 76, 147, 0.1);
 }
 
 body.light-theme .format-specific-control h4 {
-    color: var(--chocolate-martini);
+    color: #6a4c93;
 }
 
 body.light-theme .control-group select,
 body.light-theme .control-group input[type="number"] {
-    background-color: var(--cannoli-cream);
-    border-color: var(--safari);
-    color: var(--chocolate-martini);
+    background-color: #fff8f8;
+    border-color: #ffafcc;
+    color: #6a4c93;
 }
 
 body.light-theme .preset-btn {
@@ -291,19 +291,19 @@ body.pastel-theme .drop-zone.dragover {
 }
 
 body.pastel-theme .format-controls {
-    background-color: var(--tendril);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff8f8;
+    box-shadow: 0 2px 10px rgba(106, 76, 147, 0.1);
 }
 
 body.pastel-theme .format-specific-control h4 {
-    color: var(--chocolate-martini);
+    color: #6a4c93;
 }
 
 body.pastel-theme .control-group select,
 body.pastel-theme .control-group input[type="number"] {
-    background-color: var(--gardenia);
-    border-color: var(--willow);
-    color: var(--chocolate-martini);
+    background-color: #fff8f8;
+    border-color: #ffafcc;
+    color: #6a4c93;
 }
 
 body.pastel-theme .preset-btn {
@@ -357,7 +357,8 @@ body.pastel-theme .share-link input {
 .theme-toggle {
     position: fixed;
     top: 20px;
-    right: 20px;
+    right: 80px;
+    /* Adjusted to make space for language button */
     padding: 12px;
     font-size: 1.2em;
     border: none;
@@ -370,6 +371,58 @@ body.pastel-theme .share-link input {
 
 .theme-toggle:hover {
     transform: scale(1.1);
+}
+
+/* Language toggle button */
+.language-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 15px;
+    /* Slightly wider for text */
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    /* Still round */
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s;
+    text-transform: uppercase;
+}
+
+.language-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Theme-specific adjustments for language toggle */
+body.dark-theme .language-toggle {
+    background-color: var(--mocha-mousse);
+    color: var(--cannoli-cream);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .language-toggle:hover {
+    background-color: var(--sirocco);
+}
+
+body.light-theme .language-toggle {
+    background-color: var(--cream-tan);
+    color: var(--chocolate-martini);
+}
+
+body.light-theme .language-toggle:hover {
+    background-color: var(--safari);
+}
+
+body.pastel-theme .language-toggle {
+    background-color: var(--tendril);
+    color: var(--chocolate-martini);
+}
+
+body.pastel-theme .language-toggle:hover {
+    background-color: var(--willow);
 }
 
 /* Controls section */
@@ -388,7 +441,8 @@ body.pastel-theme .share-link input {
     background-color: white;
     border-radius: 10px;
     padding: 20px;
-    margin: 15px 0;
+    margin: 15px auto;
+    /* Centered horizontally */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -612,94 +666,6 @@ body.pastel-theme .control-group input[type="number"] {
     flex-wrap: wrap;
 }
 
-/* Sharing Controls */
-.sharing-controls {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.sharing-controls h4 {
-    margin: 0 0 15px 0;
-    color: #333;
-}
-
-.share-message {
-    margin-bottom: 15px;
-}
-
-.share-message textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    resize: vertical;
-    font-family: inherit;
-}
-
-.share-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-.share-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-}
-
-.share-btn img {
-    width: 16px;
-    height: 16px;
-    filter: invert(1);
-}
-
-.share-link {
-    display: flex;
-    gap: 10px;
-}
-
-.share-link input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-family: inherit;
-}
-
-/* Dark theme modifications */
-body.dark-theme .sharing-controls {
-    border-top-color: #444;
-}
-
-body.dark-theme .sharing-controls h4 {
-    color: #f4f4f4;
-}
-
-body.dark-theme .share-message textarea,
-body.dark-theme .share-link input {
-    background-color: #1a1a1a;
-    border-color: #444;
-    color: #f4f4f4;
-}
-
-/* Pastel theme modifications */
-body.pastel-theme .sharing-controls {
-    border-top-color: #ffafcc;
-}
-
-body.pastel-theme .sharing-controls h4 {
-    color: #6a4c93;
-}
-
-body.pastel-theme .share-message textarea,
-body.pastel-theme .share-link input {
-    border-color: #ffafcc;
-    color: #6a4c93;
-}
 
 .preview-box {
     flex: 1;
@@ -796,8 +762,9 @@ body.dark-theme .map-container h4 {
 body.dark-theme .detail-box p {
     color: #ccc;
 }
+
 .detail-box {
-  flex: 1;
+    flex: 1;
     min-width: 300px;
     background-color: white;
     border-radius: 10px;
@@ -854,4 +821,104 @@ body.dark-theme .format-select {
     .detail-box {
         min-width: 100%;
     }
+}
+
+/* Header Styles */
+.app-header {
+    background-color: var(--baltic-amber);
+    /* Use a theme color */
+    color: var(--cannoli-cream);
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.app-header p {
+    margin: 5px 0 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Footer Styles */
+.app-footer {
+    background-color: var(--mocha-mousse);
+    /* Use a theme color */
+    color: var(--cream-tan);
+    padding: 20px;
+    text-align: center;
+    margin-top: 40px;
+    /* Space from content above */
+    font-size: 0.9em;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    /* Shadow at the top */
+}
+
+.app-footer .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-footer p {
+    margin: 0;
+}
+
+.app-footer .contact-icons a {
+    color: var(--cannoli-cream);
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.app-footer .contact-icons a:hover {
+    color: var(--baltic-amber);
+}
+
+/* Theme-specific adjustments for header and footer */
+body.light-theme .app-header {
+    background-color: var(--chanterelle);
+    color: var(--chocolate-martini);
+}
+
+body.light-theme .app-footer {
+    background-color: var(--safari);
+    color: var(--chocolate-martini);
+}
+
+body.light-theme .app-footer .contact-icons a {
+    color: var(--chocolate-martini);
+}
+
+body.light-theme .app-footer .contact-icons a:hover {
+    color: var(--baltic-amber);
+}
+
+body.pastel-theme .app-header {
+    background-color: var(--rose-tan);
+    color: var(--gardenia);
+}
+
+body.pastel-theme .app-footer {
+    background-color: var(--cobblestone);
+    color: var(--gardenia);
+}
+
+body.pastel-theme .app-footer .contact-icons a {
+    color: var(--gardenia);
+}
+
+body.pastel-theme .app-footer .contact-icons a:hover {
+    color: var(--rose-tan);
 }

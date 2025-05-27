@@ -10,13 +10,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-theme">
+    <header class="app-header">
+        <h1 data-i18n="headerTitle">PixelForge</h1>
+        <p data-i18n="headerSubtitle">Your ultimate image manipulation tool</p>
+    </header>
+
     <button id="themeToggle" class="theme-toggle">🌓</button>
+    <button id="languageToggle" class="language-toggle">EN</button>
     
     <div class="controls">
     <div id="dropZone" class="drop-zone">
-        <p>Drag & Drop Images Here</p>
+        <p data-i18n="uploadDragDrop">Drag & Drop Images Here</p>
         <input type="file" id="uploadInput" hidden accept="image/*,.cr2,.nef,.arw,.dng,.orf,.raf,.rw2,.pef,.srw">
-        <button class="btn" onclick="document.getElementById('uploadInput').click()">Upload Image</button>
+        <button class="btn" onclick="document.getElementById('uploadInput').click()" data-i18n="uploadButton">Upload Image</button>
     </div>
         
     <select id="formatSelect" class="format-select">
@@ -29,26 +35,28 @@
     </select>
 
     <div class="quality-presets">
-            <button class="btn preset-btn" data-quality="30">Low</button>
-            <button class="btn preset-btn" data-quality="60">Medium</button>
-            <button class="btn preset-btn" data-quality="92">High</button>
+            <button class="btn preset-btn" data-quality="30" data-i18n="low">Low</button>
+            <button class="btn preset-btn" data-quality="60" data-i18n="medium">Medium</button>
+            <button class="btn preset-btn" data-quality="92" data-i18n="high">High</button>
         </div>
         <div class="compression-controls">
-            <label for="qualitySlider">Quality:</label>
+            <label for="qualitySlider" data-i18n="qualityLabel">Quality:</label>
             <input type="range" id="qualitySlider" min="0" max="100" value="92">
             <span id="qualityValue">92%</span>
         </div>
-        <button class="btn" id="convertBtn">Convert</button>
-        <button class="btn" id="downloadBtn" disabled>Download</button>
+        <button class="btn" id="convertBtn" data-i18n="convert">Convert</button>
+        <button class="btn" id="downloadBtn" disabled data-i18n="download">Download</button>
+        <button id="shareBtn" class="btn share-btn" disabled data-i18n="share">Share</button>
     </div>
 
+    <!-- Format Specific Controls -->
     <!-- Format Specific Controls -->
     <div class="format-controls">
         <!-- BMP Controls -->
         <div id="bmpControls" class="format-specific-control">
-            <h4>BMP Options</h4>
+            <h4 data-i18n="bmpOptions">BMP Options</h4>
             <div class="control-group">
-                <label for="bmpBitDepth">Bit Depth:</label>
+                <label for="bmpBitDepth" data-i18n="bitDepth">Bit Depth:</label>
                 <select id="bmpBitDepth">
                     <option value="24" selected>24-bit</option>
                     <!-- Add other bit depths later if needed -->
@@ -58,8 +66,8 @@
 
         <!-- ICO Controls -->
         <div id="icoControls" class="format-specific-control">
-            <h4>ICO Options</h4>
-            <p>(Note: Currently generates only 32x32)</p>
+            <h4 data-i18n="icoOptions">ICO Options</h4>
+            <p data-i18n="icoNote">(Note: Currently generates only 32x32)</p>
             <div class="checkbox-group">
                 <label><input type="checkbox" value="16" disabled> 16x16</label>
                 <label><input type="checkbox" value="32" checked disabled> 32x32</label>
@@ -70,6 +78,22 @@
 
         <!-- Add other format controls here later -->
 
+        <!-- JPG Controls -->
+        <div id="jpgControls" class="format-specific-control">
+            <h4 data-i18n="jpgOptions">JPG Options</h4>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="jpgProgressive" data-i18n="progressive"> Progressive</label>
+            </div>
+        </div>
+
+        <!-- PNG Controls -->
+        <div id="pngControls" class="format-specific-control">
+            <h4 data-i18n="pngOptions">PNG Options</h4>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="pngInterlaced" data-i18n="interlaced"> Interlaced</label>
+            </div>
+        </div>
+
     </div>
 
     <div class="progress-container">
@@ -78,44 +102,33 @@
 
     <div class="preview-section">
         <div class="preview-box">
-            <h3>Input Preview</h3>
+            <h3 data-i18n="inputPreview">Input Preview</h3>
             <img id="inputPreview" class="preview-image">
         </div>
         <div class="preview-box">
-            <h3>Output Preview</h3>
+            <h3 data-i18n="outputPreview">Output Preview</h3>
             <img id="outputPreview" class="preview-image">
-            </div>
         </div>
     </div>
 
     <!-- File details and metadata section -->
-    
     <div class="file-details">
         <div class="detail-box">
-            <h4>Input File Details</h4>
-            <p id="inputDetails">No file selected</p>
+            <h4 data-i18n="inputFileDetails">Input File Details</h4>
+            <p id="inputDetails" data-i18n="noFileSelected">No file selected</p>
             <div id="inputMetadata" class="metadata-section"></div>
         </div>
         <div class="detail-box">
-            <h4>Output File Details</h4>
-            <p id="outputDetails">Convert file to see details</p>
+            <h4 data-i18n="outputFileDetails">Output File Details</h4>
+            <p id="outputDetails" data-i18n="convertFileToSeeDetails">Convert file to see details</p>
             <div id="outputMetadata" class="metadata-section"></div>
         </div>
     </div>
 
     <!-- Map Container -->
     <div id="mapContainer" class="map-container" style="display: none;"> <!-- Initially hidden -->
-        <h4>Location Data</h4>
+        <h4 data-i18n="locationData">Location Data</h4>
         <div id="map"></div> <!-- Map will be initialized here -->
-    </div>
-
-    <!-- Sharing Section -->
-    <div class="sharing-controls">
-        <h4>Share Result</h4>
-        <div class="share-buttons">
-             <button id="shareBtn" class="btn share-btn" disabled>Share</button>
-             <!-- Add other sharing options like copy link later if needed -->
-        </div>
     </div>
 
     <!-- Core libraries -->
@@ -127,5 +140,16 @@
      <!-- Application script (as module) -->
     <script type="module" src="script.js"></script>
     
+    <footer class="app-footer">
+        <div class="footer-content">
+            <p data-i18n="footerRights">&copy; 2025 PixelForge. All rights reserved.</p>
+            <p data-i18n="footerDisclaimer">Disclaimer: This tool is for personal use only. We do not store your images or data.</p>
+            <div class="contact-icons">
+                <a href="#" target="_blank" data-i18n="github">GitHub</a> | 
+                <a href="#" target="_blank" data-i18n="linkedin">LinkedIn</a> | 
+                <a href="#" target="_blank" data-i18n="contact">Contact</a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
